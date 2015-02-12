@@ -8,6 +8,8 @@
 
 ## Quick start
 
+### On Ubuntu (only LTS releases)
+
 1. Set up the minos archive:
 
    ```
@@ -21,14 +23,6 @@
    ```
 
 3. Enjoy ☺!
-
-## Uninstalling
-
-If by any reason you dislike these settings you can uninstall by running:
-
-   ```
-   $ sudo apt-get remove bash-minos-settings
-   ```
 
 ## Feedback
 
