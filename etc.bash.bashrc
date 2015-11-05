@@ -33,6 +33,27 @@ PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 #    . /etc/bash_completion
 #fi
 
+# Source profile.d even though "it's meant to be for login shells
+# only", because we need a hook integration for
+# e.g. command-not-found, bash-completion, gnome-terminal/vte,
+# screen/byobu etc. And e.g. on fedora systems, bashrc does source
+# profile.d. If something does break, things in /etc/profile.d will
+# need to differentiate interractive shells by inspecting "$PS1" (or
+# similar as /etc/profile.d/vte.sh already does). If there is bad
+# interraction between snippets in profile.d, that's already a bug,
+# against affected packages to sort out, since login shells are
+# already affected.
+#
+# Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=675008
+if [ -d /etc/profile.d ]; then
+  for i in /etc/profile.d/*.sh; do
+    [ -r $i ] && . $i
+  done
+  unset i
+fi
+
+# if /etc/profile.d hook integration was default this could be provided
+# by the sudo package, eg /etc/profile.d/sudo.sh
 # sudo hint
 if [ ! -e "$HOME/.sudo_as_admin_successful" ] && [ ! -e "$HOME/.hushlogin" ] ; then
     case " $(groups) " in *\ admin\ *)
@@ -46,39 +67,27 @@ if [ ! -e "$HOME/.sudo_as_admin_successful" ] && [ ! -e "$HOME/.hushlogin" ] ; t
     esac
 fi
 
+# if /etc/profile.d hook integration was default this could be provided
+# by the command-not-found package, eg /etc/profile.d/command-not-found.sh
 # if the command-not-found package is installed, use it
 if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found/command-not-found ]; then
-	function command_not_found_handle {
-	        # check because c-n-f could've been removed in the meantime
-                if [ -x /usr/lib/command-not-found ]; then
-		   /usr/bin/python /usr/lib/command-not-found -- "$1"
-                   return $?
-                elif [ -x /usr/share/command-not-found/command-not-found ]; then
-		   /usr/bin/python /usr/share/command-not-found/command-not-found -- "$1"
-                   return $?
-		else
-		   printf "%s: command not found\n" "$1" >&2
-		   return 127
-		fi
-	}
+    function command_not_found_handle {
+        #minos launcher, provide arithmetic operations, money conversion, weather, etc
+        if [ -x "$(command -v dmenu-run 2>/dev/null)" ]; then
+            dmenu-run --command_not_found_handle "${@}" && return 0
+        fi
+
+        if [ -x /usr/lib/command-not-found ]; then
+            /usr/bin/python /usr/lib/command-not-found -- "$1"
+            return $?
+        elif [ -x /usr/share/command-not-found/command-not-found ]; then
+            /usr/bin/python /usr/share/command-not-found/command-not-found -- "$1"
+            return $?
+        else
+            printf "%s: command not found\n" "$1" >&2
+            return 127
+        fi
+    }
 fi
 
-# Source profile.d even though "it's meant to be for login shells
-# only", because we need a hook integration for
-# e.g. command-not-found, bash-completion, gnome-terminal/vte,
-# screen/byobu etc. And e.g. on fedora systems, bashrc does source
-# profile.d. If something does break, things in /etc/profile.d will
-# need to differentiate interractive shells by inspecting "$PS1" (or
-# similar as /etc/profile.d/vte.sh already does). If there is bad
-# interraction between snippets in profile.d, that's already a bug,
-# against affected packages to sort out, since login shells are
-# already affected.
-#
-# Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=675008
-
-if [ -d /etc/profile.d ]; then
-  for i in /etc/profile.d/*.sh; do
-    [ -r $i ] && . $i
-  done
-  unset i
-fi
+# vim: set ts=8 sw=4 tw=0 ft=sh :
