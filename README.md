@@ -6,7 +6,7 @@
 
 - minos-core-settings sets bash to vi mode by default but no vi mode options exist currently in /etc/inputrc, this repository add those, specially vim-objects =)_
 
-- command_not_found_handle function is executed every time a command is not found, this repository adds a call to `dmenu-run` provided by the minos-tools-extra package which adds math operations, web searches, currency conversion, etc within the default interactive shell.
+- command_not_found_handle function is executed every time a command is not found, this repository adds a call to `dmenu-launcher` provided by the minos-tools-extra package which adds math operations, web searches, currency conversion, etc within the default interactive shell.
 
 ## Quick start
 

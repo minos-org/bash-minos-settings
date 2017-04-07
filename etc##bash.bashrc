@@ -73,8 +73,8 @@ fi
 if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found/command-not-found ]; then
     function command_not_found_handle {
         #minos launcher, provide arithmetic operations, money conversion, weather, etc
-        if [ -x "$(command -v dmenu-run 2>/dev/null)" ]; then
-            dmenu-run --command_not_found_handle "${@}" && return 0
+        if [ -x "$(command -v dmenu-launcher 2>/dev/null)" ]; then
+            dmenu-launcher --command_not_found_handle "${@}" && return 0
         fi
 
         if [ -x /usr/lib/command-not-found ]; then
