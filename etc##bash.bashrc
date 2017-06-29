@@ -69,12 +69,12 @@ fi
 
 # if /etc/profile.d hook integration was default this could be provided
 # by the command-not-found package, eg /etc/profile.d/command-not-found.sh
-# if the command-not-found package is installed, use it
 if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found/command-not-found ]; then
     function command_not_found_handle {
-        #minos launcher, provide arithmetic operations, money conversion, weather, etc
-        if [ -x "$(command -v dmenu-launcher 2>/dev/null)" ]; then
-            dmenu-launcher --command_not_found_handle "${@}" && return 0
+        #do useful guesses on not found commands:
+        #math, autocd, open links, money conversion, weather, etc
+        if [ -x /usr/bin/fuck ]; then
+            /usr/bin/fuck --command-not-found "${@}" && return 0
         fi
 
         if [ -x /usr/lib/command-not-found ]; then
