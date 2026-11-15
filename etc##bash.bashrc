@@ -73,15 +73,15 @@ if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found/command-no
     function command_not_found_handle {
         #do useful guesses on not found commands:
         #math, autocd, open links, money conversion, weather, etc
-        if [ -x /usr/bin/fuck ]; then
-            /usr/bin/fuck --command-not-found "${@}" && return 0
+        if command -v fuck >/dev/null 2>&1; then
+            fuck --command-not-found "${@}" && return 0
         fi
 
         if [ -x /usr/lib/command-not-found ]; then
-            /usr/bin/python /usr/lib/command-not-found -- "$1"
+            /usr/lib/command-not-found -- "$1"
             return $?
         elif [ -x /usr/share/command-not-found/command-not-found ]; then
-            /usr/bin/python /usr/share/command-not-found/command-not-found -- "$1"
+            /usr/share/command-not-found/command-not-found -- "$1"
             return $?
         else
             printf "%s: command not found\n" "$1" >&2
